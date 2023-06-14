@@ -149,6 +149,8 @@ public:
      */
     string setVelRaw(int16_t goal);
 
+    string setVelRPM(float goal);
+
     /**
      * Reads the encoder position of the Dynamixel motor.
      * Returns: A string indicating the current encoder position.

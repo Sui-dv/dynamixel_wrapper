@@ -295,6 +295,11 @@ string DynamixelHandle::setVelRaw(int16_t goal)
     return logHeader(LOG_ERROR) + "Control mode invalid";
 }
 
+string DynamixelHandle::setVelRPM(float goal)
+{
+    return setVelRaw(static_cast<uint16_t>(floor(goal / vel_unit_scale_)));
+}
+
 float DynamixelHandle::getVelRPM()
 {
     readEncoderVel();
