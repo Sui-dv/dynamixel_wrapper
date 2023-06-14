@@ -35,11 +35,11 @@ using namespace std;
 class DynamixelHandle
 {
 private:
-    const shared_ptr<dynamixel::PortHandler> port_handler_;
-    const shared_ptr<dynamixel::PacketHandler> packet_handler_;
+    shared_ptr<dynamixel::PortHandler> port_handler_;
+    shared_ptr<dynamixel::PacketHandler> packet_handler_;
 
-    const uint8_t           id_;
-    const uint8_t           mode_;
+    uint8_t                 id_;
+    uint8_t                 mode_;
     uint16_t                model_number_;
 
     bool                    led_ = 0;
@@ -76,6 +76,8 @@ public:
      *   - port: A shared pointer to the PortHandler object for communication.
      *   - packet: A shared pointer to the PacketHandler object for packet handling.
      */
+    DynamixelHandle() = default;
+
     DynamixelHandle(uint8_t id,
                     uint8_t mode,
                     shared_ptr<dynamixel::PortHandler> port,
@@ -85,6 +87,11 @@ public:
      * Destructor: Cleans up the DynamixelHandle object.
      */
     ~DynamixelHandle();
+
+    void setup(uint8_t id,
+                uint8_t mode,
+                shared_ptr<dynamixel::PortHandler> port,
+                shared_ptr<dynamixel::PacketHandler> packet);
 
     /**
      * Initializes the Dynamixel motor and sets its mode and torque.

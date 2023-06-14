@@ -9,6 +9,14 @@ DynamixelHandle::~DynamixelHandle()
 {
 }
 
+void DynamixelHandle::setup(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
+{
+    port_handler_ = port;
+    packet_handler_ = packet;
+    id_ = id;
+    mode_ = mode;
+}
+
 string DynamixelHandle::logHeader(uint8_t state)
 {
     string status = "[dynamixel_handle ID:" + to_string(id_) + "] ";
