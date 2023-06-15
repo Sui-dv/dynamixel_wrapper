@@ -88,6 +88,14 @@ public:
      */
     ~DynamixelHandle();
 
+    /**
+     * Configures the class parameters
+     * Parameters:
+     *   - id: The ID of the Dynamixel motor.
+     *   - mode: The operating mode of the Dynamixel motor (position or velocity control).
+     *   - port: A shared pointer to the PortHandler object for communication.
+     *   - packet: A shared pointer to the PacketHandler object for packet handling.
+     */
     void setup(uint8_t id,
                 uint8_t mode,
                 shared_ptr<dynamixel::PortHandler> port,
@@ -149,6 +157,12 @@ public:
      */
     string setVelRaw(int16_t goal);
 
+    /**
+     * Sets the velocity of the Dynamixel motor in RPM.
+     * Parameters:
+     *   - goal: The goal velocity to set in RPM.
+     * Returns: A string indicating the status of the velocity set.
+     */
     string setVelRPM(float goal);
 
     /**
