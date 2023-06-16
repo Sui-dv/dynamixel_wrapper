@@ -204,28 +204,32 @@ float DynamixelHandle::getPosDegree()
 string DynamixelHandle::setPosRaw(uint16_t goal)
 {
     readPosLimit();
-    if (mode_ == POSITION_CONTROL)
+    if (torque_ == 1)
     {
-        if (goal >= pos_limit_min_ && goal <= pos_limit_max_)
+        if (mode_ == POSITION_CONTROL)
         {
-            pos_goal_ = goal;
-
-            com_report_ = packet_handler_->write4ByteTxRx(
-                port_handler_.get(),
-                id_,
-                ADDR_GOAL_POSITION,
-                pos_goal_,
-                &dxl_report_);
-
-            if (com_report_ != COMM_SUCCESS)
+            if (goal >= pos_limit_min_ && goal <= pos_limit_max_)
             {
-                return logHeader(LOG_ERROR) + "Set position failed";
+                pos_goal_ = goal;
+
+                com_report_ = packet_handler_->write4ByteTxRx(
+                    port_handler_.get(),
+                    id_,
+                    ADDR_GOAL_POSITION,
+                    pos_goal_,
+                    &dxl_report_);
+
+                if (com_report_ != COMM_SUCCESS)
+                {
+                    return logHeader(LOG_ERROR) + "Set position failed";
+                }
+                return logHeader(LOG_SUCCESS) + "Position set, new position: " + to_string(pos_goal_);
             }
-            return logHeader(LOG_SUCCESS) + "Position set, new position: " + to_string(pos_goal_);
+            return logHeader(LOG_ERROR) + "Goal position out of bound";
         }
-        return logHeader(LOG_ERROR) + "Goal position out of bound";
+        return logHeader(LOG_ERROR) + "Control mode invalid";
     }
-    return logHeader(LOG_ERROR) + "Control mode invalid";
+    return logHeader(LOG_ERROR) + "Torque is disabled";
 }
 
 string DynamixelHandle::setPosDegree(float goal)
@@ -271,28 +275,32 @@ string DynamixelHandle::readVelLimit()
 string DynamixelHandle::setVelRaw(int16_t goal)
 {
     readVelLimit();
-    if (mode_ == VELOCITY_CONTROL)
+    if (torque_ == 1)
     {
-        if (goal >= -vel_limit_ && goal <= vel_limit_)
+        if (mode_ == VELOCITY_CONTROL)
         {
-            vel_goal_ = goal;
-
-            com_report_ = packet_handler_->write4ByteTxRx(
-                port_handler_.get(),
-                id_,
-                ADDR_GOAL_VELOCITY,
-                vel_goal_,
-                &dxl_report_);
-
-            if (com_report_ != COMM_SUCCESS)
+            if (goal >= -vel_limit_ && goal <= vel_limit_)
             {
-                return logHeader(LOG_ERROR) + "Set velocity failed";
+                vel_goal_ = goal;
+
+                com_report_ = packet_handler_->write4ByteTxRx(
+                    port_handler_.get(),
+                    id_,
+                    ADDR_GOAL_VELOCITY,
+                    vel_goal_,
+                    &dxl_report_);
+
+                if (com_report_ != COMM_SUCCESS)
+                {
+                    return logHeader(LOG_ERROR) + "Set velocity failed";
+                }
+                return logHeader(LOG_SUCCESS) + "Velocity set, new velocity: " + to_string(vel_goal_);
             }
-            return logHeader(LOG_SUCCESS) + "Velocity set, new velocity: " + to_string(vel_goal_);
+            return logHeader(LOG_ERROR) + "Goal velocity out of bound";
         }
-        return logHeader(LOG_ERROR) + "Goal velocity out of bound";
+        return logHeader(LOG_ERROR) + "Control mode invalid";
     }
-    return logHeader(LOG_ERROR) + "Control mode invalid";
+    return logHeader(LOG_ERROR) + "Torque is disabled";
 }
 
 string DynamixelHandle::setVelRPM(float goal)

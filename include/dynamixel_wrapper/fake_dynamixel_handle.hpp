@@ -50,6 +50,9 @@ private:
     bool                    led_ = 0;
     bool                    torque_ = 0;
 
+    int32_t                 pos_sim_ = 0;
+    int16_t                 vel_sim_ = 0;
+
     int32_t                 pos_read_;
     int32_t                 pos_goal_;
     int32_t                 pos_offset_ = 2047;
