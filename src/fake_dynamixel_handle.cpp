@@ -80,30 +80,6 @@ string FakeDynamixelHandle::readEncoderPos()
 
 string FakeDynamixelHandle::readPosLimit()
 {
-    com_report_ = packet_handler_->read4ByteTxRx(
-        port_handler_.get(),
-        id_,
-        ADDR_POS_LIMIT_MAX,
-        reinterpret_cast<uint32_t *>(&pos_limit_max_),
-        &dxl_report_);
-
-    if (com_report_ != COMM_SUCCESS)
-    {
-        return logHeader(LOG_ERROR) + "Position limit reading failed";
-    }
-
-    com_report_ = packet_handler_->read4ByteTxRx(
-        port_handler_.get(),
-        id_,
-        ADDR_POS_LIMIT_MIN,
-        reinterpret_cast<uint32_t *>(&pos_limit_min_),
-        &dxl_report_);
-
-    if (com_report_ != COMM_SUCCESS)
-    {
-        return logHeader(LOG_ERROR) + "Position limit reading failed";
-    }
-
     return logHeader(LOG_INFO) + "Position limit max: " + to_string(pos_limit_max_) + ", min: " + to_string(pos_limit_min_);
 }
 
@@ -165,18 +141,6 @@ string FakeDynamixelHandle::readEncoderVel()
 
 string FakeDynamixelHandle::readVelLimit()
 {
-    com_report_ = packet_handler_->read4ByteTxRx(
-        port_handler_.get(),
-        id_,
-        ADDR_VEL_LIMIT,
-        reinterpret_cast<uint32_t *>(&vel_limit_),
-        &dxl_report_);
-
-    if (com_report_ != COMM_SUCCESS)
-    {
-        return logHeader(LOG_ERROR) + "Velocity limit reading failed";
-    }
-
     return logHeader(LOG_INFO) + "Velocity limit : " + to_string(vel_limit_) + ", " + to_string((float)vel_limit_ * vel_unit_scale_) + " RPM";
 }
 
