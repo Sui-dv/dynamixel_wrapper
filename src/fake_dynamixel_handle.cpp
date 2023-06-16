@@ -113,17 +113,7 @@ string FakeDynamixelHandle::setPosDegree(float goal)
 
 string FakeDynamixelHandle::readEncoderVel()
 {
-    com_report_ = packet_handler_->read4ByteTxRx(
-        port_handler_.get(),
-        id_,
-        ADDR_PRESENT_VELOCITY,
-        reinterpret_cast<uint32_t *>(&vel_read_),
-        &dxl_report_);
-
-    if (com_report_ != COMM_SUCCESS)
-    {
-        return logHeader(LOG_ERROR) + "Velocity reading failed";
-    }
+    vel_read_ = vel_sim_;
 
     return logHeader(LOG_INFO) + "Encoder Velocity: " + to_string(vel_read_);
 }
@@ -144,6 +134,8 @@ string FakeDynamixelHandle::setVelRaw(int16_t goal)
             {
                 vel_goal_ = goal;
                 vel_sim_ = vel_goal_;
+
+                // TODO : add pos_sim_ integrator, REQ : time step
 
                 return logHeader(LOG_SUCCESS) + "Velocity set, new velocity: " + to_string(vel_goal_);
             }
