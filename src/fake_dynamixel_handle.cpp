@@ -13,19 +13,15 @@ FakeDynamixelHandle::~FakeDynamixelHandle()
 
 void FakeDynamixelHandle::setup(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
 {
-    // // Real dynamixel:
-    // port_handler_ = port;
-    // packet_handler_ = packet;
-    // id_   = id;
-    // mode_ = mode;
-
-    // Fake Dynamixel : 
-    cout << "Fake dynamixel init SUCCESS" << endl;
+    port_handler_ = port;
+    packet_handler_ = packet;
+    id_   = id;
+    mode_ = mode;
 }
 
 string FakeDynamixelHandle::logHeader(uint8_t state)
 {
-    string status = "[dynamixel_handle ID:" + to_string(id_) + "] ";
+    string status = "[fake_handle ID:" + to_string(id_) + "] ";
     if (state == LOG_SUCCESS)
     {
         return status + "SUCCESS: ";
@@ -44,114 +40,24 @@ string FakeDynamixelHandle::logHeader(uint8_t state)
 
 string FakeDynamixelHandle::init()
 {
-    // Serial port open
-    if (!port_handler_->openPort())
-    {
-        return logHeader(LOG_ERROR) + "Port failed to open";
-    }
-
-    // Set baudrate
-    if (!port_handler_->setBaudRate(BAUDRATE))
-    {
-        return logHeader(LOG_ERROR) + "Baudrate setting failed";
-    }
-
-    // Ping!
-    com_report_ = packet_handler_->ping(
-        port_handler_.get(), // Convert shared_ptr to regular ptr
-        id_,
-        &model_number_,
-        &dxl_report_);
-
-    if (com_report_ != COMM_SUCCESS)
-    {
-        return logHeader(LOG_ERROR) + "Initialization failed";
-    }
-
-    // LED off by default
-    com_report_ = packet_handler_->write1ByteTxRx(
-        port_handler_.get(),
-        id_,
-        ADDR_LED,
-        led_,
-        &dxl_report_);
-
-    // Check mode
-    uint8_t current_mode;
-    com_report_ = packet_handler_->read1ByteTxRx(
-        port_handler_.get(),
-        id_,
-        ADDR_OPERATING_MODE,
-        &current_mode,
-        &dxl_report_);
-
-    if (current_mode != mode_)
-    {
-        com_report_ = packet_handler_->write1ByteTxRx(
-            port_handler_.get(),
-            id_,
-            ADDR_OPERATING_MODE,
-            mode_,
-            &dxl_report_);
-    }
-
-    // Torque off by default
-    deactivate();
-
     return logHeader(LOG_SUCCESS) + "Initialization, Mode: " + (mode_ == POSITION_CONTROL ? "Position" : "Velocity") + " control";
 }
 
 string FakeDynamixelHandle::toggleLED()
 {
     led_ = !led_;
-    com_report_ = packet_handler_->write1ByteTxRx(
-        port_handler_.get(),
-        id_,
-        ADDR_LED,
-        led_,
-        &dxl_report_);
-
-    if (com_report_ != COMM_SUCCESS)
-    {
-        return logHeader(LOG_ERROR) + "LED toggle failed";
-    }
-
     return logHeader(LOG_SUCCESS) + "LED toggle: " + (led_ ? "ON" : "OFF");
 }
 
 string FakeDynamixelHandle::activate()
 {
     torque_ = 1;
-    com_report_ = packet_handler_->write1ByteTxRx(
-        port_handler_.get(),
-        id_,
-        ADDR_TORQUE_ENABLE,
-        torque_,
-        &dxl_report_);
-
-    if (com_report_ != COMM_SUCCESS)
-    {
-        return logHeader(LOG_ERROR) + "Torque enable failed";
-    }
-
     return logHeader(LOG_SUCCESS) + "Torque ON";
 }
 
 string FakeDynamixelHandle::deactivate()
 {
     torque_ = 0;
-    com_report_ = packet_handler_->write1ByteTxRx(
-        port_handler_.get(),
-        id_,
-        ADDR_TORQUE_ENABLE,
-        torque_,
-        &dxl_report_);
-
-    if (com_report_ != COMM_SUCCESS)
-    {
-        return logHeader(LOG_ERROR) + "Torque disable failed";
-    }
-
     return logHeader(LOG_SUCCESS) + "Torque OFF";
 }
 

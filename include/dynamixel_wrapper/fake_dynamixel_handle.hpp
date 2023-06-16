@@ -33,6 +33,10 @@
 
 using namespace std;
 
+/**
+* DynamixelHandle class but fake
+* "Warning is not an error", his famous last word
+*/
 class FakeDynamixelHandle
 {
 private:
