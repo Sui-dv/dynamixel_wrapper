@@ -1,5 +1,5 @@
-#ifndef DYNAMIXEL_HANDLE_HPP_
-#define DYNAMIXEL_HANDLE_HPP_
+#ifndef FAKE_DYNAMIXEL_HANDLE_HPP_
+#define FAKE_DYNAMIXEL_HANDLE_HPP_
 
 // Control table address for xl430-w250
 #define ADDR_OPERATING_MODE     11
@@ -27,12 +27,13 @@
 #include <memory>
 #include <string>
 #include <cmath>
+#include <iostream>
 
 #include "dynamixel_sdk/dynamixel_sdk.h"
 
 using namespace std;
 
-class DynamixelHandle
+class FakeDynamixelHandle
 {
 private:
     shared_ptr<dynamixel::PortHandler> port_handler_;
@@ -69,24 +70,24 @@ private:
 
 public:
     /**
-     * Constructor: Initializes a DynamixelHandle object.
+     * Constructor: Initializes a FakeDynamixelHandle object.
      * Parameters:
      *   - id: The ID of the Dynamixel motor.
      *   - mode: The operating mode of the Dynamixel motor (position or velocity control).
      *   - port: A shared pointer to the PortHandler object for communication.
      *   - packet: A shared pointer to the PacketHandler object for packet handling.
      */
-    DynamixelHandle() = default;
+    FakeDynamixelHandle() = default;
 
-    DynamixelHandle(uint8_t id,
+    FakeDynamixelHandle(uint8_t id,
                     uint8_t mode,
                     shared_ptr<dynamixel::PortHandler> port,
                     shared_ptr<dynamixel::PacketHandler> packet);
 
     /**
-     * Destructor: Cleans up the DynamixelHandle object.
+     * Destructor: Cleans up the FakeDynamixelHandle object.
      */
-    ~DynamixelHandle();
+    ~FakeDynamixelHandle();
 
     /**
      * Configures the class parameters
@@ -226,4 +227,4 @@ public:
     float getVelRPM();
 };
 
-#endif  // DYNAMIXEL_HANDLE_HPP_
+#endif  // FAKE_DYNAMIXEL_HANDLE_HPP_

@@ -1,23 +1,29 @@
 #include "fake_dynamixel_handle.hpp"
 
-DynamixelHandle::DynamixelHandle(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
+FakeDynamixelHandle::FakeDynamixelHandle(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
     : port_handler_(port), packet_handler_(packet), id_(id), mode_(mode)
 {
+    // Fake Dynamixel :
+    //  Use the default constructor + setup instead
 }
 
-DynamixelHandle::~DynamixelHandle()
+FakeDynamixelHandle::~FakeDynamixelHandle()
 {
 }
 
-void DynamixelHandle::setup(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
+void FakeDynamixelHandle::setup(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
 {
-    port_handler_ = port;
-    packet_handler_ = packet;
-    id_ = id;
-    mode_ = mode;
+    // // Real dynamixel:
+    // port_handler_ = port;
+    // packet_handler_ = packet;
+    // id_   = id;
+    // mode_ = mode;
+
+    // Fake Dynamixel : 
+    cout << "Fake dynamixel init SUCCESS" << endl;
 }
 
-string DynamixelHandle::logHeader(uint8_t state)
+string FakeDynamixelHandle::logHeader(uint8_t state)
 {
     string status = "[dynamixel_handle ID:" + to_string(id_) + "] ";
     if (state == LOG_SUCCESS)
@@ -36,7 +42,7 @@ string DynamixelHandle::logHeader(uint8_t state)
     return status + "DEBUG: ";
 }
 
-string DynamixelHandle::init()
+string FakeDynamixelHandle::init()
 {
     // Serial port open
     if (!port_handler_->openPort())
@@ -95,7 +101,7 @@ string DynamixelHandle::init()
     return logHeader(LOG_SUCCESS) + "Initialization, Mode: " + (mode_ == POSITION_CONTROL ? "Position" : "Velocity") + " control";
 }
 
-string DynamixelHandle::toggleLED()
+string FakeDynamixelHandle::toggleLED()
 {
     led_ = !led_;
     com_report_ = packet_handler_->write1ByteTxRx(
@@ -113,7 +119,7 @@ string DynamixelHandle::toggleLED()
     return logHeader(LOG_SUCCESS) + "LED toggle: " + (led_ ? "ON" : "OFF");
 }
 
-string DynamixelHandle::activate()
+string FakeDynamixelHandle::activate()
 {
     torque_ = 1;
     com_report_ = packet_handler_->write1ByteTxRx(
@@ -131,7 +137,7 @@ string DynamixelHandle::activate()
     return logHeader(LOG_SUCCESS) + "Torque ON";
 }
 
-string DynamixelHandle::deactivate()
+string FakeDynamixelHandle::deactivate()
 {
     torque_ = 0;
     com_report_ = packet_handler_->write1ByteTxRx(
@@ -149,7 +155,7 @@ string DynamixelHandle::deactivate()
     return logHeader(LOG_SUCCESS) + "Torque OFF";
 }
 
-string DynamixelHandle::readEncoderPos()
+string FakeDynamixelHandle::readEncoderPos()
 {
     com_report_ = packet_handler_->read4ByteTxRx(
         port_handler_.get(),
@@ -166,7 +172,7 @@ string DynamixelHandle::readEncoderPos()
     return logHeader(LOG_INFO) + "Encoder position: " + to_string(pos_read_);
 }
 
-string DynamixelHandle::readPosLimit()
+string FakeDynamixelHandle::readPosLimit()
 {
     com_report_ = packet_handler_->read4ByteTxRx(
         port_handler_.get(),
@@ -195,13 +201,13 @@ string DynamixelHandle::readPosLimit()
     return logHeader(LOG_INFO) + "Position limit max: " + to_string(pos_limit_max_) + ", min: " + to_string(pos_limit_min_);
 }
 
-float DynamixelHandle::getPosDegree()
+float FakeDynamixelHandle::getPosDegree()
 {
     readEncoderPos();
     return ((float)(pos_read_ - pos_offset_)) / 4095 * 360;
 }
 
-string DynamixelHandle::setPosRaw(uint16_t goal)
+string FakeDynamixelHandle::setPosRaw(uint16_t goal)
 {
     readPosLimit();
     if (mode_ == POSITION_CONTROL)
@@ -228,13 +234,13 @@ string DynamixelHandle::setPosRaw(uint16_t goal)
     return logHeader(LOG_ERROR) + "Control mode invalid";
 }
 
-string DynamixelHandle::setPosDegree(float goal)
+string FakeDynamixelHandle::setPosDegree(float goal)
 {
     float goal_unit_scale = 0.088; // Degree per unit
     return setPosRaw(static_cast<uint16_t>(floor(goal / goal_unit_scale)) + pos_offset_);
 }
 
-string DynamixelHandle::readEncoderVel()
+string FakeDynamixelHandle::readEncoderVel()
 {
     com_report_ = packet_handler_->read4ByteTxRx(
         port_handler_.get(),
@@ -251,7 +257,7 @@ string DynamixelHandle::readEncoderVel()
     return logHeader(LOG_INFO) + "Encoder Velocity: " + to_string(vel_read_);
 }
 
-string DynamixelHandle::readVelLimit()
+string FakeDynamixelHandle::readVelLimit()
 {
     com_report_ = packet_handler_->read4ByteTxRx(
         port_handler_.get(),
@@ -268,7 +274,7 @@ string DynamixelHandle::readVelLimit()
     return logHeader(LOG_INFO) + "Velocity limit : " + to_string(vel_limit_) + ", " + to_string((float)vel_limit_ * vel_unit_scale_) + " RPM";
 }
 
-string DynamixelHandle::setVelRaw(int16_t goal)
+string FakeDynamixelHandle::setVelRaw(int16_t goal)
 {
     readVelLimit();
     if (mode_ == VELOCITY_CONTROL)
@@ -295,18 +301,18 @@ string DynamixelHandle::setVelRaw(int16_t goal)
     return logHeader(LOG_ERROR) + "Control mode invalid";
 }
 
-string DynamixelHandle::setVelRPM(float goal)
+string FakeDynamixelHandle::setVelRPM(float goal)
 {
     return setVelRaw(static_cast<uint16_t>(floor(goal / vel_unit_scale_)));
 }
 
-float DynamixelHandle::getVelRPM()
+float FakeDynamixelHandle::getVelRPM()
 {
     readEncoderVel();
     return (float)vel_read_ * vel_unit_scale_;
 }
 
-string DynamixelHandle::setPosOffset(uint16_t offset)
+string FakeDynamixelHandle::setPosOffset(uint16_t offset)
 {
     pos_offset_ = offset;
     return logHeader(LOG_SUCCESS) + "Position offset set: " + to_string(pos_offset_);
