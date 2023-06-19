@@ -110,10 +110,16 @@ public:
                 shared_ptr<dynamixel::PacketHandler> packet);
 
     /**
+    * Callback function to simulate the Velocity and Position.
+    * Without this function, the output states will be 0.
+    */
+    void sim_step();
+
+    /**
      * Initializes the Dynamixel motor and sets its mode and torque.
      * Returns: A string indicating the status of the initialization.
      */
-    string init();
+    string init(int32_t init_pos);
 
     /**
      * Toggles the LED of the Dynamixel motor.

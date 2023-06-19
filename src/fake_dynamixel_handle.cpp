@@ -11,6 +11,11 @@ FakeDynamixelHandle::~FakeDynamixelHandle()
 {
 }
 
+void FakeDynamixelHandle::sim_step()
+{
+
+}
+
 void FakeDynamixelHandle::setup(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
 {
     port_handler_ = port;
@@ -38,8 +43,9 @@ string FakeDynamixelHandle::logHeader(uint8_t state)
     return status + "DEBUG: ";
 }
 
-string FakeDynamixelHandle::init()
+string FakeDynamixelHandle::init(int32_t init_pos)
 {
+    pos_sim_ = init_pos;
     return logHeader(LOG_SUCCESS) + "Initialization, Mode: " + (mode_ == POSITION_CONTROL ? "Position" : "Velocity") + " control";
 }
 
