@@ -10,13 +10,13 @@ using namespace std;
 struct WheelConfig 
 {
   shared_ptr<FakeDynamixelHandle> fake_motor;
-  shared_ptr<DynamixelHandle>     motor;
+  shared_ptr<DynamixelHandle>     real_motor;
 
-  bool                            real_hardware = 0;
+  bool                            real_hardware = 0;  // 1: using real hardware; 0: fake hardware
   
   string                          wheel_name = "";
   int16_t                         wheel_id = -1;
-  bool                            mode = 1; // 1: POSITION_CONTROL; 0: VELOCITY_CONTROL
+  bool                            mode = 1;           // 1: POSITION_CONTROL; 0: VELOCITY_CONTROL
   
   double                          encoder_pos = 0;
   double                          encoder_vel = 0;
