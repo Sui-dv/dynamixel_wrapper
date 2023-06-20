@@ -22,7 +22,7 @@ void FakeDynamixelHandle::sim_step()
         std::chrono::duration_cast<std::chrono::milliseconds>(time_step).count()
     );
 
-    cout << millisec << endl;
+    pos_sim_ += (int)std::floor(vel_sim_ * (double)millisec) % 4095;       // RungeKutta Integrator
 }
 
 void FakeDynamixelHandle::setup(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
