@@ -28,10 +28,12 @@
 #include <string>
 #include <cmath>
 #include <iostream>
+#include <chrono>
 
 #include "dynamixel_sdk/dynamixel_sdk.h"
 
 using namespace std;
+using namespace std::chrono_literals;
 
 /**
 * DynamixelHandle class but fake
@@ -52,6 +54,7 @@ private:
 
     int32_t                 pos_sim_ = 0;
     int16_t                 vel_sim_ = 0;
+    std::chrono::time_point<std::chrono::system_clock>  timer_ = std::chrono::system_clock::now();
 
     int32_t                 pos_read_;
     int32_t                 pos_goal_;
@@ -110,8 +113,8 @@ public:
                 shared_ptr<dynamixel::PacketHandler> packet);
 
     /**
-    * Callback function to simulate the Velocity and Position.
-    * Without this function, the output states will be 0.
+    * Callback function to simulate Position in VELOCITY_MODE.
+    * Without this function, the output position will be 0.
     */
     void sim_step();
 

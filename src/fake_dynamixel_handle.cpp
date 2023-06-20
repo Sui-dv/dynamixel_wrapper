@@ -14,6 +14,15 @@ FakeDynamixelHandle::~FakeDynamixelHandle()
 void FakeDynamixelHandle::sim_step()
 {
 
+    std::chrono::duration<double> time_step = std::chrono::system_clock::now() - timer_;
+    timer_ = std::chrono::system_clock::now();
+    
+    // Cast the step duration to millis (uint32_t)
+    uint32_t millisec = static_cast<uint32_t>(
+        std::chrono::duration_cast<std::chrono::milliseconds>(time_step).count()
+    );
+
+    cout << millisec << endl;
 }
 
 void FakeDynamixelHandle::setup(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
