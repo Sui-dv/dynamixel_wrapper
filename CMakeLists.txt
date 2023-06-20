@@ -24,7 +24,8 @@ include_directories(include/dynamixel_wrapper)
 
 set(HEADER_FILES 
     include/dynamixel_wrapper/dynamixel_handle.hpp
-    include/dynamixel_wrapper/fake_dynamixel_handle.hpp)
+    include/dynamixel_wrapper/fake_dynamixel_handle.hpp
+    include/dynamixel_wrapper/wheel_config.hpp)
 
 add_library(dynamixel_wrapper 
             src/dynamixel_handle.cpp 
