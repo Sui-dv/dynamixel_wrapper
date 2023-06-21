@@ -116,7 +116,7 @@ public:
     * Callback function to simulate Position in VELOCITY_MODE.
     * Without this function, the output position will be 0.
     */
-    void sim_step();
+    void simStep(double gain);
 
     /**
      * Initializes the Dynamixel motor and sets its mode and torque.

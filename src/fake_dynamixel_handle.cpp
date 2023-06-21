@@ -11,18 +11,16 @@ FakeDynamixelHandle::~FakeDynamixelHandle()
 {
 }
 
-void FakeDynamixelHandle::sim_step()
+void FakeDynamixelHandle::simStep(double gain)
 {
 
     std::chrono::duration<double> time_step = std::chrono::system_clock::now() - timer_;
     timer_ = std::chrono::system_clock::now();
     
     // Cast the step duration to millis (uint32_t)
-    uint32_t millisec = static_cast<uint32_t>(
-        std::chrono::duration_cast<std::chrono::milliseconds>(time_step).count()
-    );
+    double millisec = std::chrono::duration_cast<std::chrono::milliseconds>(time_step).count();
 
-    pos_sim_ += (int)std::floor(vel_sim_ * (double)millisec) % 4095;       // RungeKutta Integrator
+    pos_sim_ += (int)std::trunc(vel_sim_ * millisec * gain)  % 4095;       // RungeKutta Integrator
 }
 
 void FakeDynamixelHandle::setup(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
