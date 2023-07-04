@@ -21,6 +21,9 @@ struct WheelConfig
   double                          encoder_pos = 0;
   double                          encoder_vel = 0;
 
+  double                          pos_multiplier = 1;
+  double                          vel_multiplier = 1;
+
   double                          goal = 0;
 
   double                          radius = 0.05;
