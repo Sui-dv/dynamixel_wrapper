@@ -18,9 +18,9 @@ void FakeDynamixelHandle::simStep(double gain)
     timer_ = std::chrono::system_clock::now();
     
     // Cast the step duration to millis (uint32_t)
-    double millisec = std::chrono::duration_cast<std::chrono::milliseconds>(time_step).count();
+    uint32_t millisec = std::chrono::duration_cast<std::chrono::milliseconds>(time_step).count();
 
-    pos_sim_ += (int)std::trunc(vel_sim_ * millisec * gain)  % 4095;       // RungeKutta Integrator
+    pos_sim_ = (pos_sim_ + (int)(vel_sim_ * millisec * gain)/10) % 4095;       // RungeKutta Integrator
 }
 
 void FakeDynamixelHandle::setup(uint8_t id, uint8_t mode, shared_ptr<dynamixel::PortHandler> port, shared_ptr<dynamixel::PacketHandler> packet)
@@ -148,7 +148,6 @@ string FakeDynamixelHandle::setVelRaw(int16_t goal)
                 vel_goal_ = goal;
                 vel_sim_ = vel_goal_;
 
-                // TODO : add pos_sim_ integrator, REQ : time step
 
                 return logHeader(LOG_SUCCESS) + "Velocity set, new velocity: " + to_string(vel_goal_);
             }
