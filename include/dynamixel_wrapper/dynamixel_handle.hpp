@@ -22,7 +22,7 @@
 #define POSITION_CONTROL        3
 #define VELOCITY_CONTROL        1
 
-#define BAUDRATE                1000000     
+#define BAUDRATE                57600     
 
 #include <memory>
 #include <string>

@@ -18,7 +18,7 @@ struct WheelConfig
   int16_t                         wheel_id = -1;
   bool                            mode = 1;             // 1: POSITION_CONTROL; 0: VELOCITY_CONTROL
   
-  double                          encoder_pos = 0;      // [rad]
+  double                          encoder_pos = 0;      // [deg]
   double                          encoder_vel = 0;      // [rpm]
 
   double                          pos_multiplier = 1;
